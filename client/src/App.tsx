@@ -50,7 +50,7 @@ import { JoinGameDialog } from './components/JoinGameDialog';
 import * as THREE from 'three';
 import { PlayerUI } from './components/PlayerUI';
 import { DesignModeUI } from './components/DesignModeUI';
-import { useDesignModeState, AVAILABLE_ASSETS } from './components/DesignMode';
+import { useDesignModeState, COLOSSEUM_ASSETS, getAssetsForArena } from './components/DesignMode';
 
 // Type Aliases
 type DbConnection = moduleBindings.DbConnection;
@@ -517,8 +517,11 @@ function App() {
           duplicateObject={designModeState.duplicateObject}
           deleteObject={designModeState.deleteObject}
           saveLayout={designModeState.saveLayout}
+          loadLayout={designModeState.loadLayout}
           clearAll={designModeState.clearAll}
-          availableAssets={AVAILABLE_ASSETS}
+          availableAssets={getAssetsForArena(designModeState.currentArena)}
+          currentArena={designModeState.currentArena}
+          setCurrentArena={designModeState.setCurrentArena}
         />
       )}
 

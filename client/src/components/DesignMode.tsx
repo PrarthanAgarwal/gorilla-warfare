@@ -3,8 +3,11 @@ import { useGLTF, TransformControls } from '@react-three/drei';
 import * as THREE from 'three';
 import { useThree } from '@react-three/fiber';
 
+// Arena type definition
+export type ArenaType = 'colosseum' | 'jungle';
+
 // Available assets for the colosseum
-export const AVAILABLE_ASSETS = [
+export const COLOSSEUM_ASSETS = [
   { name: 'Floor', path: '/models/environments/colosseum/floor.glb', category: 'Structure' },
   { name: 'Wall', path: '/models/environments/colosseum/wall.glb', category: 'Structure' },
   { name: 'Wall Corner', path: '/models/environments/colosseum/wall-corner.glb', category: 'Structure' },
@@ -28,6 +31,98 @@ export const AVAILABLE_ASSETS = [
   { name: 'Floor Detail', path: '/models/environments/colosseum/floor-detail.glb', category: 'Decoration' },
   { name: 'Character Soldier', path: '/models/environments/colosseum/character-soldier.glb', category: 'Reference' },
 ];
+
+// Available assets for the jungle arena
+export const JUNGLE_ASSETS = [
+  // Jungle Platform Assets
+  { name: 'Platform', path: '/models/environments/jungle-arena/jungle-platform/platform.gltf', category: 'Structure' },
+  { name: 'Platform Ramp', path: '/models/environments/jungle-arena/jungle-platform/platform-ramp.gltf', category: 'Structure' },
+  { name: 'Platform Overhang', path: '/models/environments/jungle-arena/jungle-platform/platform-overhang.gltf', category: 'Structure' },
+  { name: 'Platform Fortified', path: '/models/environments/jungle-arena/jungle-platform/platform-fortified.gltf', category: 'Structure' },
+  { name: 'Ladder', path: '/models/environments/jungle-arena/jungle-platform/ladder.gltf', category: 'Structure' },
+  { name: 'Ladder Long', path: '/models/environments/jungle-arena/jungle-platform/ladder-long.gltf', category: 'Structure' },
+  { name: 'Ladder Broken', path: '/models/environments/jungle-arena/jungle-platform/ladder-broken.gltf', category: 'Structure' },
+  { name: 'Poles', path: '/models/environments/jungle-arena/jungle-platform/poles.gltf', category: 'Structure' },
+  
+  // Trees and Vegetation
+  { name: 'Tree', path: '/models/environments/jungle-arena/jungle-platform/tree.gltf', category: 'Vegetation' },
+  { name: 'Tree Snow', path: '/models/environments/jungle-arena/jungle-platform/tree-snow.gltf', category: 'Vegetation' },
+  { name: 'Tree Pine', path: '/models/environments/jungle-arena/jungle-platform/tree-pine.gltf', category: 'Vegetation' },
+  { name: 'Tree Pine Snow', path: '/models/environments/jungle-arena/jungle-platform/tree-pine-snow.gltf', category: 'Vegetation' },
+  { name: 'Tree Pine Small', path: '/models/environments/jungle-arena/jungle-platform/tree-pine-small.gltf', category: 'Vegetation' },
+  { name: 'Tree Pine Snow Small', path: '/models/environments/jungle-arena/jungle-platform/tree-pine-snow-small.gltf', category: 'Vegetation' },
+  { name: 'Plant', path: '/models/environments/jungle-arena/jungle-platform/plant.gltf', category: 'Vegetation' },
+  { name: 'Flowers', path: '/models/environments/jungle-arena/jungle-platform/flowers.gltf', category: 'Vegetation' },
+  { name: 'Flowers Tall', path: '/models/environments/jungle-arena/jungle-platform/flowers-tall.gltf', category: 'Vegetation' },
+  { name: 'Grass', path: '/models/environments/jungle-arena/jungle-platform/grass.gltf', category: 'Vegetation' },
+  { name: 'Mushrooms', path: '/models/environments/jungle-arena/jungle-platform/mushrooms.gltf', category: 'Vegetation' },
+  { name: 'Hedge', path: '/models/environments/jungle-arena/jungle-platform/hedge.gltf', category: 'Vegetation' },
+  { name: 'Hedge Corner', path: '/models/environments/jungle-arena/jungle-platform/hedge-corner.gltf', category: 'Vegetation' },
+  
+  // Cover and Obstacles
+  { name: 'Crate', path: '/models/environments/jungle-arena/jungle-platform/crate.gltf', category: 'Cover' },
+  { name: 'Crate Strong', path: '/models/environments/jungle-arena/jungle-platform/crate-strong.gltf', category: 'Cover' },
+  { name: 'Crate Item', path: '/models/environments/jungle-arena/jungle-platform/crate-item.gltf', category: 'Cover' },
+  { name: 'Rocks', path: '/models/environments/jungle-arena/jungle-platform/rocks.gltf', category: 'Cover' },
+  { name: 'Stones', path: '/models/environments/jungle-arena/jungle-platform/stones.gltf', category: 'Cover' },
+  { name: 'Spike Block', path: '/models/environments/jungle-arena/jungle-platform/spike-block.gltf', category: 'Cover' },
+  { name: 'Spike Block Wide', path: '/models/environments/jungle-arena/jungle-platform/spike-block-wide.gltf', category: 'Cover' },
+  
+  // Interactive Elements
+  { name: 'Door Open', path: '/models/environments/jungle-arena/jungle-platform/door-open.gltf', category: 'Interactive' },
+  { name: 'Door Large Open', path: '/models/environments/jungle-arena/jungle-platform/door-large-open.gltf', category: 'Interactive' },
+  { name: 'Door Rotate', path: '/models/environments/jungle-arena/jungle-platform/door-rotate.gltf', category: 'Interactive' },
+  { name: 'Door Rotate Large', path: '/models/environments/jungle-arena/jungle-platform/door-rotate-large.gltf', category: 'Interactive' },
+  { name: 'Lever', path: '/models/environments/jungle-arena/jungle-platform/lever.gltf', category: 'Interactive' },
+  { name: 'Key', path: '/models/environments/jungle-arena/jungle-platform/key.gltf', category: 'Interactive' },
+  { name: 'Lock', path: '/models/environments/jungle-arena/jungle-platform/lock.gltf', category: 'Interactive' },
+  
+  // Traps and Hazards
+  { name: 'Trap Spikes', path: '/models/environments/jungle-arena/jungle-platform/trap-spikes.gltf', category: 'Hazards' },
+  { name: 'Trap Spikes Large', path: '/models/environments/jungle-arena/jungle-platform/trap-spikes-large.gltf', category: 'Hazards' },
+  { name: 'Saw', path: '/models/environments/jungle-arena/jungle-platform/saw.gltf', category: 'Hazards' },
+  
+  // Fencing and Barriers
+  { name: 'Fence Straight', path: '/models/environments/jungle-arena/jungle-platform/fence-straight.gltf', category: 'Barriers' },
+  { name: 'Fence Corner', path: '/models/environments/jungle-arena/jungle-platform/fence-corner.gltf', category: 'Barriers' },
+  { name: 'Fence Corner Curved', path: '/models/environments/jungle-arena/jungle-platform/fence-corner-curved.gltf', category: 'Barriers' },
+  { name: 'Fence Broken', path: '/models/environments/jungle-arena/jungle-platform/fence-broken.gltf', category: 'Barriers' },
+  { name: 'Fence Low Straight', path: '/models/environments/jungle-arena/jungle-platform/fence-low-straight.gltf', category: 'Barriers' },
+  { name: 'Fence Low Corner', path: '/models/environments/jungle-arena/jungle-platform/fence-low-corner.gltf', category: 'Barriers' },
+  { name: 'Fence Low Corner Curved', path: '/models/environments/jungle-arena/jungle-platform/fence-low-corner-curved.gltf', category: 'Barriers' },
+  { name: 'Fence Low Broken', path: '/models/environments/jungle-arena/jungle-platform/fence-low-broken.gltf', category: 'Barriers' },
+  
+  // Decorative Items
+  { name: 'Flag', path: '/models/environments/jungle-arena/jungle-platform/flag.gltf', category: 'Decoration' },
+  { name: 'Sign', path: '/models/environments/jungle-arena/jungle-platform/sign.gltf', category: 'Decoration' },
+  { name: 'Heart', path: '/models/environments/jungle-arena/jungle-platform/heart.gltf', category: 'Decoration' },
+  { name: 'Jewel', path: '/models/environments/jungle-arena/jungle-platform/jewel.gltf', category: 'Decoration' },
+  
+  // Main Tree Assets from gltf folder (selection)
+  { name: 'Forest Tree 1A', path: '/models/environments/jungle-arena/gltf/Tree_1_A_Color1.gltf', category: 'Trees' },
+  { name: 'Forest Tree 1B', path: '/models/environments/jungle-arena/gltf/Tree_1_B_Color1.gltf', category: 'Trees' },
+  { name: 'Forest Tree 1C', path: '/models/environments/jungle-arena/gltf/Tree_1_C_Color1.gltf', category: 'Trees' },
+  { name: 'Forest Tree 2A', path: '/models/environments/jungle-arena/gltf/Tree_2_A_Color1.gltf', category: 'Trees' },
+  { name: 'Forest Tree 2B', path: '/models/environments/jungle-arena/gltf/Tree_2_B_Color1.gltf', category: 'Trees' },
+  { name: 'Forest Tree 2C', path: '/models/environments/jungle-arena/gltf/Tree_2_C_Color1.gltf', category: 'Trees' },
+  { name: 'Forest Tree 3A', path: '/models/environments/jungle-arena/gltf/Tree_3_A_Color1.gltf', category: 'Trees' },
+  { name: 'Forest Tree 3B', path: '/models/environments/jungle-arena/gltf/Tree_3_B_Color1.gltf', category: 'Trees' },
+  { name: 'Forest Tree 3C', path: '/models/environments/jungle-arena/gltf/Tree_3_C_Color1.gltf', category: 'Trees' },
+  { name: 'Rock Formation 1A', path: '/models/environments/jungle-arena/gltf/Rock_1_O_Color1.gltf', category: 'Rocks' },
+  { name: 'Rock Formation 1B', path: '/models/environments/jungle-arena/gltf/Rock_1_P_Color1.gltf', category: 'Rocks' },
+  { name: 'Rock Formation 1C', path: '/models/environments/jungle-arena/gltf/Rock_1_Q_Color1.gltf', category: 'Rocks' },
+  { name: 'Rock Formation 2A', path: '/models/environments/jungle-arena/gltf/Rock_2_A_Color1.gltf', category: 'Rocks' },
+  { name: 'Rock Formation 2B', path: '/models/environments/jungle-arena/gltf/Rock_2_B_Color1.gltf', category: 'Rocks' },
+  { name: 'Rock Formation 2C', path: '/models/environments/jungle-arena/gltf/Rock_2_C_Color1.gltf', category: 'Rocks' },
+];
+
+// Helper function to get assets for current arena
+export const getAssetsForArena = (arena: ArenaType) => {
+  return arena === 'colosseum' ? COLOSSEUM_ASSETS : JUNGLE_ASSETS;
+};
+
+// For backward compatibility
+export const AVAILABLE_ASSETS = COLOSSEUM_ASSETS;
 
 export interface PlacedObject {
   id: string;
@@ -53,7 +148,10 @@ export interface DesignModeState {
   duplicateObject: (id: string) => void;
   deleteObject: (id: string) => void;
   saveLayout: () => void;
+  loadLayout: (data: string) => void;
   clearAll: () => void;
+  currentArena: ArenaType;
+  setCurrentArena: (arena: ArenaType) => void;
 }
 
 interface DesignModeProps {
@@ -66,22 +164,29 @@ interface DesignModeProps {
 
 // Custom hook to manage design mode state
 export const useDesignModeState = (isDesignMode: boolean, onSaveLayout: (objects: PlacedObject[]) => void): DesignModeState => {
-  const [placedObjects, setPlacedObjects] = useState<PlacedObject[]>([]);
+  // Separate object collections for each arena
+  const [colosseumObjects, setColosseumObjects] = useState<PlacedObject[]>([]);
+  const [jungleObjects, setJungleObjects] = useState<PlacedObject[]>([]);
   const [selectedObjectId, setSelectedObjectId] = useState<string | null>(null);
   const [selectedAsset, setSelectedAsset] = useState<string | null>(null);
   const [transformMode, setTransformMode] = useState<'translate' | 'rotate' | 'scale'>('translate');
   const [showAssetPalette, setShowAssetPalette] = useState(true);
+  const [currentArena, setCurrentArena] = useState<ArenaType>('colosseum');
+
+  // Get current arena's objects
+  const placedObjects = currentArena === 'colosseum' ? colosseumObjects : jungleObjects;
+  const setPlacedObjects = currentArena === 'colosseum' ? setColosseumObjects : setJungleObjects;
 
   const updateObject = useCallback((id: string, updates: Partial<PlacedObject>) => {
     setPlacedObjects(prev => prev.map(obj => 
       obj.id === id ? { ...obj, ...updates } : obj
     ));
-  }, []);
+  }, [setPlacedObjects]);
 
   const deleteObject = useCallback((id: string) => {
     setPlacedObjects(prev => prev.filter(obj => obj.id !== id));
     setSelectedObjectId(null);
-  }, []);
+  }, [setPlacedObjects]);
 
   const duplicateObject = useCallback((id: string) => {
     const original = placedObjects.find(obj => obj.id === id);
@@ -98,25 +203,86 @@ export const useDesignModeState = (isDesignMode: boolean, onSaveLayout: (objects
       setPlacedObjects(prev => [...prev, newObject]);
       setSelectedObjectId(newObject.id);
     }
-  }, [placedObjects]);
+  }, [placedObjects, setPlacedObjects]);
 
   const clearAll = useCallback(() => {
-    if (window.confirm('Clear all objects? This cannot be undone.')) {
+    if (window.confirm(`Clear all objects in ${currentArena} arena? This cannot be undone.`)) {
       setPlacedObjects([]);
       setSelectedObjectId(null);
     }
-  }, []);
+  }, [currentArena, setPlacedObjects]);
 
   const saveLayout = useCallback(() => {
     onSaveLayout(placedObjects);
+    const layoutData = JSON.stringify({
+      arena: currentArena,
+      objects: placedObjects
+    }, null, 2);
     console.log('Generated Layout Code:');
-    console.log(JSON.stringify(placedObjects, null, 2));
-    alert('Layout saved! Check console for code.');
-  }, [placedObjects, onSaveLayout]);
+    console.log(layoutData);
+    
+    // Create and trigger download
+    const blob = new Blob([layoutData], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${currentArena}-arena-layout.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    
+    alert('Layout saved! JSON file downloaded.');
+  }, [placedObjects, onSaveLayout, currentArena]);
+
+  const loadLayout = useCallback((data: string) => {
+    try {
+      const parsed = JSON.parse(data);
+      
+      // Support both old format (just objects array) and new format (with arena)
+      if (Array.isArray(parsed)) {
+        // Old format - just objects, load into current arena
+        setPlacedObjects(parsed);
+        alert(`Layout loaded successfully into ${currentArena} arena!`);
+      } else if (parsed.objects && Array.isArray(parsed.objects)) {
+        // New format - with arena info
+        const targetArena = parsed.arena && (parsed.arena === 'colosseum' || parsed.arena === 'jungle') 
+          ? parsed.arena 
+          : currentArena;
+        
+        // Switch to target arena and load objects
+        setCurrentArena(targetArena);
+        
+        // Set objects for the target arena
+        if (targetArena === 'colosseum') {
+          setColosseumObjects(parsed.objects);
+        } else {
+          setJungleObjects(parsed.objects);
+        }
+        
+        alert(`Layout loaded successfully! Switched to ${targetArena} arena.`);
+      } else {
+        throw new Error('Invalid JSON format');
+      }
+      
+      setSelectedObjectId(null);
+      setSelectedAsset(null);
+    } catch (error) {
+      alert('Error loading layout: Invalid JSON format');
+      console.error('Load error:', error);
+    }
+  }, [currentArena, setColosseumObjects, setJungleObjects]);
 
   const addObject = useCallback((object: PlacedObject) => {
     setPlacedObjects(prev => [...prev, object]);
     setSelectedObjectId(object.id);
+  }, [setPlacedObjects]);
+
+  // Custom arena setter that clears selection when switching
+  const handleArenaChange = useCallback((arena: ArenaType) => {
+    setCurrentArena(arena);
+    setSelectedObjectId(null); // Clear selection when switching arenas
+    setSelectedAsset(null); // Clear selected asset too
   }, []);
 
   return {
@@ -134,7 +300,10 @@ export const useDesignModeState = (isDesignMode: boolean, onSaveLayout: (objects
     duplicateObject,
     deleteObject,
     saveLayout,
-    clearAll
+    loadLayout,
+    clearAll,
+    currentArena,
+    setCurrentArena: handleArenaChange
   };
 };
 
@@ -296,13 +465,14 @@ export const DesignMode: React.FC<DesignModeProps> = ({ isDesignMode, onSaveLayo
     // Get click position in world space
     const point = e.point;
     if (point) {
+      const currentAssets = getAssetsForArena(designState.currentArena);
       const newObject: PlacedObject = {
         id: `obj_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
         assetPath: selectedAsset,
         position: [point.x, point.y, point.z],
         rotation: [0, 0, 0],
         scale: [1, 1, 1],
-        name: AVAILABLE_ASSETS.find(a => a.path === selectedAsset)?.name || 'Unknown'
+        name: currentAssets.find(a => a.path === selectedAsset)?.name || 'Unknown'
       };
       
       designState.addObject(newObject);

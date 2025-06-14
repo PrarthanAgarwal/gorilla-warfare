@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useRef } from 'react';
+import { ArenaType } from './DesignMode';
 
 interface Asset {
   path: string;
@@ -27,8 +28,11 @@ interface DesignModeUIProps {
   duplicateObject: (id: string) => void;
   deleteObject: (id: string) => void;
   saveLayout: () => void;
+  loadLayout: (data: string) => void;
   clearAll: () => void;
   availableAssets: Asset[];
+  currentArena: ArenaType;
+  setCurrentArena: (arena: ArenaType) => void;
 }
 
 export const DesignModeUI: React.FC<DesignModeUIProps> = ({
@@ -43,10 +47,28 @@ export const DesignModeUI: React.FC<DesignModeUIProps> = ({
   duplicateObject,
   deleteObject,
   saveLayout,
+  loadLayout,
   clearAll,
-  availableAssets
+  availableAssets,
+  currentArena,
+  setCurrentArena
 }) => {
-  const categories = ['Structure', 'Cover', 'Decoration', 'Interactive', 'Reference'];
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  
+  // Get unique categories from available assets
+  const categories = [...new Set(availableAssets.map(asset => asset.category))].sort();
+
+  const handleFileLoad = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const content = e.target?.result as string;
+        loadLayout(content);
+      };
+      reader.readAsText(file);
+    }
+  };
 
   return (
     <>
@@ -129,6 +151,26 @@ export const DesignModeUI: React.FC<DesignModeUIProps> = ({
         minWidth: '200px'
       }}>
         <h3 style={{ margin: '0 0 15px 0' }}>🔧 Design Controls</h3>
+        
+        {/* Arena Selector */}
+        <div style={{ margin: '10px 0' }}>
+          <label style={{ display: 'block', marginBottom: '5px' }}>Arena Type:</label>
+          <select
+            value={currentArena}
+            onChange={(e) => setCurrentArena(e.target.value as ArenaType)}
+            style={{ 
+              width: '100%', 
+              padding: '5px',
+              backgroundColor: '#444',
+              color: 'white',
+              border: '1px solid #666',
+              borderRadius: '4px'
+            }}
+          >
+            <option value="colosseum">🏛️ Colosseum</option>
+            <option value="jungle">🌿 Jungle Arena</option>
+          </select>
+        </div>
         
         {/* Placement Mode Indicator */}
         {selectedAsset && (
@@ -263,6 +305,28 @@ export const DesignModeUI: React.FC<DesignModeUIProps> = ({
           >
             💾 Save Layout
           </button>
+          <button 
+            onClick={() => fileInputRef.current?.click()}
+            style={{ 
+              width: '100%',
+              marginBottom: '5px',
+              padding: '8px',
+              backgroundColor: '#FF9800',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer'
+            }}
+          >
+            📁 Load Layout
+          </button>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept=".json"
+            onChange={handleFileLoad}
+            style={{ display: 'none' }}
+          />
           <button 
             onClick={clearAll}
             style={{ 

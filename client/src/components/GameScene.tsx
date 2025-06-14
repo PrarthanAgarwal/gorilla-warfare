@@ -40,6 +40,7 @@ import { PlayerData, InputState } from '../generated';
 import { Identity } from '@clockworklabs/spacetimedb-sdk';
 import { Player } from './Player';
 import { ColosseumEnvironment } from './ColosseumEnvironment';
+import { JungleEnvironment } from './JungleEnvironment';
 import { DesignMode, DesignModeState } from './DesignMode';
 
 interface GameSceneProps {
@@ -75,36 +76,74 @@ export const GameScene: React.FC<GameSceneProps> = ({
       {/* Remove solid color background */}
       {/* <color attach="background" args={['#add8e6']} /> */}
       
-      {/* Colosseum-appropriate sky */}
-      <Sky distance={450000} sunPosition={[3, 2, 5]} inclination={0.1} azimuth={0.15} />
+      {/* Environment-appropriate sky and lighting */}
+      {designState?.currentArena === 'jungle' ? (
+        <>
+          {/* Jungle-appropriate sky */}
+          <Sky distance={450000} sunPosition={[2, 1, 3]} inclination={0.3} azimuth={0.25} />
+          
+          {/* Softer ambient light for jungle atmosphere */}
+          <ambientLight intensity={0.7} color="#e6f7e6" />
+          
+          {/* Filtered sunlight through canopy */}
+          <directionalLight 
+            ref={directionalLightRef}
+            position={[15, 30, 10]} 
+            intensity={1.5} 
+            castShadow 
+            color="#f0f8e6"
+            shadow-mapSize-width={2048} 
+            shadow-mapSize-height={2048} 
+            shadow-bias={-0.0001} 
+            shadow-camera-left={-40}
+            shadow-camera-right={40}
+            shadow-camera-top={40}
+            shadow-camera-bottom={-40}
+            shadow-camera-near={0.1} 
+            shadow-camera-far={120} 
+          />
+          
+          {/* Green-tinted fill light */}
+          <directionalLight 
+            position={[-8, 12, 8]} 
+            intensity={0.6} 
+            color="#d4f4d4"
+          />
+        </>
+      ) : (
+        <>
+          {/* Colosseum-appropriate sky */}
+          <Sky distance={450000} sunPosition={[3, 2, 5]} inclination={0.1} azimuth={0.15} />
 
-      {/* Warm ambient light for arena atmosphere */}
-      <ambientLight intensity={0.6} color="#fff5e6" />
-      
-      {/* Main sun light for dramatic shadows */}
-      <directionalLight 
-        ref={directionalLightRef} // Assign ref
-        position={[20, 25, 15]} 
-        intensity={2.0} 
-        castShadow 
-        color="#fff8dc"
-        shadow-mapSize-width={2048} 
-        shadow-mapSize-height={2048} 
-        shadow-bias={-0.0001} 
-        shadow-camera-left={-40} // Wider to cover colosseum
-        shadow-camera-right={40}
-        shadow-camera-top={40}
-        shadow-camera-bottom={-40}
-        shadow-camera-near={0.1} 
-        shadow-camera-far={120} 
-      />
-      
-      {/* Additional warm fill light */}
-      <directionalLight 
-        position={[-10, 15, 10]} 
-        intensity={0.8} 
-        color="#ffebcd"
-      />
+          {/* Warm ambient light for arena atmosphere */}
+          <ambientLight intensity={0.6} color="#fff5e6" />
+          
+          {/* Main sun light for dramatic shadows */}
+          <directionalLight 
+            ref={directionalLightRef}
+            position={[20, 25, 15]} 
+            intensity={2.0} 
+            castShadow 
+            color="#fff8dc"
+            shadow-mapSize-width={2048} 
+            shadow-mapSize-height={2048} 
+            shadow-bias={-0.0001} 
+            shadow-camera-left={-40}
+            shadow-camera-right={40}
+            shadow-camera-top={40}
+            shadow-camera-bottom={-40}
+            shadow-camera-near={0.1} 
+            shadow-camera-far={120} 
+          />
+          
+          {/* Additional warm fill light */}
+          <directionalLight 
+            position={[-10, 15, 10]} 
+            intensity={0.8} 
+            color="#ffebcd"
+          />
+        </>
+      )}
 
       {/* Conditionally render Light and Shadow Camera Helpers */}
       {isDebugPanelVisible && directionalLightRef.current && (
@@ -115,28 +154,37 @@ export const GameScene: React.FC<GameSceneProps> = ({
         </>
       )}
       
-      {/* Environment - Show DesignMode or ColosseumEnvironment */}
+      {/* Environment - Show DesignMode or appropriate arena environment */}
       {isDesignMode && designState ? (
         <DesignMode 
           isDesignMode={isDesignMode}
           onSaveLayout={(objects) => {
-            console.log('Saved colosseum layout:', objects);
+            console.log(`Saved ${designState.currentArena} layout:`, objects);
           }}
           designState={designState}
           orbitControlsRef={orbitControlsRef}
         />
       ) : (
-        <ColosseumEnvironment />
+        // Show appropriate environment based on current arena in design state or default to colosseum
+        designState?.currentArena === 'jungle' ? (
+          <JungleEnvironment />
+        ) : (
+          <ColosseumEnvironment />
+        )
       )}
       
-      {/* Ground plane for areas outside the colosseum */}
+      {/* Ground plane for areas outside the arena */}
       <Plane 
         args={[100, 100]} 
         rotation={[-Math.PI / 2, 0, 0]} 
         position={[0, -0.01, 0]} 
         receiveShadow={true} 
       >
-        <meshStandardMaterial color="#8B7355" transparent opacity={0.7} />
+        <meshStandardMaterial 
+          color={designState?.currentArena === 'jungle' ? "#2d5016" : "#8B7355"} 
+          transparent 
+          opacity={0.7} 
+        />
       </Plane>
 
       {/* Render Players */}
